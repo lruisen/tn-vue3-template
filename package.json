@@ -1,6 +1,18 @@
 {
   "name": "tn-template",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "description": "uniapp + tuniao-ui-vue3 项目初始化模板",
+  "license": "MIT",
+  "author": {
+    "name": "Lruisen",
+    "email": "lruisen@email.cn",
+    "github": "https://github.com/lruisen"
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=9.0"
+  },
   "scripts": {
     "dev:app": "uni -p app",
     "dev:app-android": "uni -p app-android",

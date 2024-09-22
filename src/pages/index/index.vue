@@ -30,7 +30,7 @@ const tabbarChangeEvent = (index: string | number) => {
     <view class="operation">
       <TnButton type="primary" @click="addCounter">Add Counter Value</TnButton>
     </view>
-    <TnTabbar fixed @change="tabbarChangeEvent">
+    <TnTabbar :fixed="true" @change="tabbarChangeEvent">
       <TnTabbarItem text="首页" icon="home" active-icon="home-fill" />
       <TnTabbarItem text="我的" icon="my" active-icon="my-fill" />
     </TnTabbar>
