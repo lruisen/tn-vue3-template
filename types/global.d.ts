@@ -1,6 +1,6 @@
 /* eslint-disable */
 /* prettier-ignore */
-import type { VNode } from 'vue'
+export {}
 
 /// <reference types="vite/client" />
 declare global {
