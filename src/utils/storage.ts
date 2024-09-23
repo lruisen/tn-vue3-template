@@ -1,7 +1,3 @@
-/**
- * @description 本地存储工具类
- */
-
 export default {
   /**
    * 将数据保存到本地存储中
@@ -9,7 +5,11 @@ export default {
    * @param value 保存的值
    */
   set(key: string, value: any) {
-    uni.setStorageSync(key, value)
+    if (value === undefined) {
+      return true;
+    }
+
+    uni.setStorageSync(key, value);
   },
 
   /**
@@ -19,12 +19,15 @@ export default {
    */
   get(key: string) {
     try {
-      const value = uni.getStorageSync(key)
-      if (!value) return
-      return value
+      const value = uni.getStorageSync(key);
+      if (!value) {
+        return undefined;
+      }
+
+      return value;
     } catch (e) {
-      console.error('获取数据缓存失败', e)
-      return
+      console.error('获取数据缓存失败', e);
+      return undefined;
     }
   },
 
@@ -33,13 +36,13 @@ export default {
    * @param key 移除数据的键
    */
   remove(key: string) {
-    uni.removeStorageSync(key)
+    uni.removeStorageSync(key);
   },
 
   /**
    * 清空本地存储
    */
   clear() {
-    uni.clearStorageSync()
+    uni.clearStorageSync();
   },
-}
+};
