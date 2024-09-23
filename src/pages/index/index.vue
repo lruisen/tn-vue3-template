@@ -1,24 +1,24 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import TnButton from '@tuniao/tnui-vue3-uniapp/components/button/src/button.vue'
-import TnTabbar from '@tuniao/tnui-vue3-uniapp/components/tabbar/src/tabbar.vue'
-import TnTabbarItem from '@tuniao/tnui-vue3-uniapp/components/tabbar/src/tabbar-item.vue'
-import TnNotify from '@tuniao/tnui-vue3-uniapp/components/notify/src/notify.vue'
+import { ref } from 'vue';
+import TnButton from '@tuniao/tnui-vue3-uniapp/components/button/src/button.vue';
+import TnTabbar from '@tuniao/tnui-vue3-uniapp/components/tabbar/src/tabbar.vue';
+import TnTabbarItem from '@tuniao/tnui-vue3-uniapp/components/tabbar/src/tabbar-item.vue';
+import TnNotify from '@tuniao/tnui-vue3-uniapp/components/notify/src/notify.vue';
 
-import type { TnNotifyInstance } from '@tuniao/tnui-vue3-uniapp'
+import type { TnNotifyInstance } from '@tuniao/tnui-vue3-uniapp';
 
-const notifyRef = ref<TnNotifyInstance>()
+const notifyRef = ref<TnNotifyInstance>();
 
-const counter = ref(0)
+const counter = ref(0);
 const addCounter = () => {
-  counter.value++
-}
+  counter.value++;
+};
 
 const tabbarChangeEvent = (index: string | number) => {
   notifyRef.value?.show({
     msg: `当前选中的是第${index}个Tab`,
-  })
-}
+  });
+};
 </script>
 
 <template>
