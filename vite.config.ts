@@ -1,19 +1,19 @@
-import path from 'node:path'
-import { defineConfig, loadEnv } from 'vite'
-import uni from '@dcloudio/vite-plugin-uni'
-import AutoImport from 'unplugin-auto-import/vite'
-import UniManifest from '@uni-helper/vite-plugin-uni-manifest'
+import path from 'node:path';
+import { defineConfig, loadEnv } from 'vite';
+import type { UserConfig, ConfigEnv } from 'vite';
+import uni from '@dcloudio/vite-plugin-uni';
+import AutoImport from 'unplugin-auto-import/vite';
+import UniManifest from '@uni-helper/vite-plugin-uni-manifest';
 
 // https://vitejs.dev/config/
-// @ts-ignore
-export default async ({ mode }) => {
-  const { UNI_PLATFORM } = process.env
+export default async ({ mode }: ConfigEnv): Promise<UserConfig> => {
+  const { UNI_PLATFORM } = process.env;
 
   // unocss从0.59版本开始只支持 ESM, 不再支持commonJs
-  const UnoCss = await import('unocss/vite').then((i) => i.default)
+  const UnoCss = await import('unocss/vite').then((i) => i.default);
 
-  const env = loadEnv(mode, process.cwd())
-  const { VITE_APP_PORT, VITE_DELETE_CONSOLE, VITE_SHOW_SOURCEMAP } = env
+  const env = loadEnv(mode, process.cwd());
+  const { VITE_APP_PORT, VITE_DELETE_CONSOLE, VITE_SHOW_SOURCEMAP } = env;
 
   return defineConfig({
     plugins: [
@@ -67,5 +67,5 @@ export default async ({ mode }) => {
         },
       },
     },
-  })
-}
+  });
+};
