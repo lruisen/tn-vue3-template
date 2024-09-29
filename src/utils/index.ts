@@ -1,6 +1,43 @@
 import { isArray } from './is';
 
 /**
+ * 全局配置文件名
+ */
+export const GLOB_CONFIG_FILE_NAME = 'app.config.js';
+
+/**
+ * 获取打包后的全局配置文件路径
+ * @returns 路径
+ */
+export const getAppConfigFilePath = () => {
+  const { VITE_GLOB_APP_PUBLIC_BASE } = import.meta.env;
+
+  const path = VITE_GLOB_APP_PUBLIC_BASE.endsWith('/')
+    ? VITE_GLOB_APP_PUBLIC_BASE
+    : `${VITE_GLOB_APP_PUBLIC_BASE}/`;
+
+  return `${path || '/'}${GLOB_CONFIG_FILE_NAME}`;
+};
+
+export const getConfigFileName = (env: Record<string, any>) => {
+  return `__PRODUCTION__${env.VITE_GLOB_APP_SHORT_NAME || '__APP'}__CONF__`
+    .toUpperCase()
+    .replace(/\s/g, '');
+};
+
+/**
+ * 加载全局配置文件
+ */
+export const loadGlobalConfig = async () => {
+  const path = getAppConfigFilePath();
+  const globalConfig = await import(path).then((i) => i.default);
+  const key = getConfigFileName(import.meta.env);
+
+  // 将这个全局配置挂在到 uni 对象上
+  uni[key] = globalConfig;
+};
+
+/**
  * 将URL路径参数转为对象
  * @param {String} url 路径参数
  */

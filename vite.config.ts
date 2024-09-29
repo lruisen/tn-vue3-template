@@ -4,9 +4,11 @@ import type { UserConfig, ConfigEnv } from 'vite';
 import uni from '@dcloudio/vite-plugin-uni';
 import AutoImport from 'unplugin-auto-import/vite';
 import UniManifest from '@uni-helper/vite-plugin-uni-manifest';
+// import { configHtmlPlugin } from './build/vite/html';
+import { wrapperEnv } from './build/scripts/utils';
 
 // https://vitejs.dev/config/
-export default async ({ mode }: ConfigEnv): Promise<UserConfig> => {
+export default async ({ mode, command }: ConfigEnv): Promise<UserConfig> => {
   const { UNI_PLATFORM } = process.env;
 
   // unocss从0.59版本开始只支持 ESM, 不再支持commonJs
@@ -14,6 +16,8 @@ export default async ({ mode }: ConfigEnv): Promise<UserConfig> => {
 
   const env = loadEnv(mode, process.cwd());
   const { VITE_APP_PORT, VITE_DELETE_CONSOLE, VITE_SHOW_SOURCEMAP } = env;
+  const isBuild = command === 'build';
+  const viteEnv = wrapperEnv(env);
 
   return defineConfig({
     plugins: [
@@ -31,6 +35,8 @@ export default async ({ mode }: ConfigEnv): Promise<UserConfig> => {
       UniManifest(),
       // UniXXX 需要在 Uni 之前引入
       uni(),
+      // 在 index.html 自动创建标签
+      // configHtmlPlugin(viteEnv, isBuild),
     ],
     define: {
       // 定义 uniapp 运行的平台为常量

@@ -10,8 +10,18 @@
       "/#/*": ["./types/*"]
     },
     "lib": ["ESNext", "Dom", "DOM.Iterable"],
-    "types": ["@dcloudio/types", "@tuniao/tnui-vue3-uniapp/global"]
+    "types": [],
+    "typeRoots": ["./node_modules/@dcloudio/types/", "./types/"]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "types/**/*.d.ts"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "@tuniao/tnui-vue3-uniapp/global",
+    "types/**/*.d.ts",
+    "build/**/*.ts",
+    "build/**/*.d.ts"
+  ],
   "exclude": ["node_modules", "unpackage", "dist", "**/*.js"]
 }
