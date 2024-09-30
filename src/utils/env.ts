@@ -1,4 +1,4 @@
-import { getConfigFileName } from 'build/scripts/utils';
+import { getConfigFileName } from '@/utils';
 import type { GlobEnvConfig } from '/#/config';
 
 export const getAppEnvConfig = () => {

@@ -72,6 +72,18 @@ export default async ({ mode, command }: ConfigEnv): Promise<UserConfig> => {
           drop_debugger: true, // 删除 debugger
         },
       },
+      rollupOptions: {
+        output: {
+          // 静态资源分类打包
+          assetFileNames: (assetInfo: any): string => {
+            if (assetInfo === 'app.config.js') {
+              return 'app.config.js';
+            }
+
+            return `assets/[name]-[hash].[ext]`;
+          },
+        },
+      },
     },
   });
 };
