@@ -4,12 +4,14 @@ import type { UserConfig, ConfigEnv } from 'vite';
 import uni from '@dcloudio/vite-plugin-uni';
 import AutoImport from 'unplugin-auto-import/vite';
 import UniManifest from '@uni-helper/vite-plugin-uni-manifest';
-// import { configHtmlPlugin } from './build/vite/html';
-import { wrapperEnv } from './build/scripts/utils';
+import { wrapperEnv } from './src/utils';
+import { configHtmlPlugin } from './build/vite/html';
 
 // https://vitejs.dev/config/
 export default async ({ mode, command }: ConfigEnv): Promise<UserConfig> => {
   const { UNI_PLATFORM } = process.env;
+
+  console.log('当前运行平台:', UNI_PLATFORM);
 
   // unocss从0.59版本开始只支持 ESM, 不再支持commonJs
   const UnoCss = await import('unocss/vite').then((i) => i.default);
@@ -35,8 +37,8 @@ export default async ({ mode, command }: ConfigEnv): Promise<UserConfig> => {
       UniManifest(),
       // UniXXX 需要在 Uni 之前引入
       uni(),
-      // 在 index.html 自动创建标签
-      // configHtmlPlugin(viteEnv, isBuild),
+
+      UNI_PLATFORM === 'h5' && configHtmlPlugin(viteEnv, isBuild),
     ],
     define: {
       // 定义 uniapp 运行的平台为常量
@@ -74,10 +76,16 @@ export default async ({ mode, command }: ConfigEnv): Promise<UserConfig> => {
       },
       rollupOptions: {
         output: {
-          // 静态资源分类打包
+          // 当前配置貌似只对 H5 生效
           assetFileNames: (assetInfo: any): string => {
-            if (assetInfo === 'app.config.js') {
-              return 'app.config.js';
+            // 下方处理 H5 打包时静态资源的文件位置
+            if (assetInfo.name.endsWith('.css')) {
+              return `css/[name]-[hash].css`;
+            }
+
+            const imgExt = ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp', '.ico'];
+            if (imgExt.some((ext) => assetInfo.name.endsWith(ext))) {
+              return `images/[name]-[hash].[ext]`;
             }
 
             return `assets/[name]-[hash].[ext]`;

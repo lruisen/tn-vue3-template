@@ -2,55 +2,36 @@ import { getEnvConfig, getRootPath } from './utils';
 import { getConfigFileName } from '@/utils';
 import fs, { writeFileSync } from 'fs-extra';
 import colors from 'picocolors';
-import pkg from '../../package.json';
 import { GLOB_CONFIG_FILE_NAME } from '@/utils';
 
 interface CreateConfigOptions {
   configName: string;
   config: any;
   configFileName?: string;
-  output?: string;
+  isH5?: boolean;
 }
 
 const getConfigStr = (options: CreateConfigOptions) => {
-  const { configName, config, output } = options;
+  const { configName, config, isH5 } = options;
 
-  var globalThis = global;
-
-  if (output === 'h5') {
-    const windowConf = `${global[configName]}`;
-    // Ensure that the variable will not be modified
-    let configStr = `${windowConf}=${JSON.stringify(config)};`;
-    configStr += `
-      Object.freeze(${windowConf});
-      Object.defineProperty("${global}", "${configName}", {
+  const obj = isH5 ? 'window' : 'uni';
+  const conf = `${obj}.${configName}`;
+  let configStr = `${conf}=${JSON.stringify(config)};`;
+  configStr += `
+      Object.freeze(${conf});
+      Object.defineProperty(${obj}, "${configName}", {
         configurable: false,
         writable: false,
       });
     `.replace(/\s/g, '');
 
-    return configStr;
-  } else {
-    const conf = `${global[configName]}`;
-    let configStr = `${conf}=${JSON.stringify(config)};`;
-    configStr += `
-      Object.freeze(${conf});
-      Object.defineProperty("${global}", "${configName}", {
-        configurable: false,
-        writable: false,
-      });
-      export default ${conf};
-    `;
-
-    return configStr;
-  }
+  return configStr;
 };
 
 const createConfig = (options: CreateConfigOptions) => {
-  const { configFileName, output } = options;
+  const { configFileName, isH5 } = options;
 
-  // const OUTPUT_DIR = `src/build/${output}`;
-  const OUTPUT_DIR = `src`;
+  const OUTPUT_DIR = isH5 ? 'dist/build/h5' : 'src';
 
   try {
     let configStr = getConfigStr(options);
@@ -58,20 +39,20 @@ const createConfig = (options: CreateConfigOptions) => {
     fs.mkdirp(getRootPath(OUTPUT_DIR));
     writeFileSync(getRootPath(`${OUTPUT_DIR}/${configFileName}`), configStr);
 
-    console.log(colors.cyan(`✨ [${pkg.name}]`) + ` - configuration file is build successfully:`);
+    console.log(colors.cyan(`✨ [${configFileName}] - configuration file is build successfully!`));
     console.log(colors.gray(OUTPUT_DIR + '/' + colors.green(configFileName)) + '\n');
   } catch (error) {
     console.log(colors.red('configuration file configuration file failed to package:\n' + error));
   }
 };
 
-export const runBuildConfig = (output: string = 'h5') => {
+export const runBuildConfig = (isH5: boolean) => {
   const config = getEnvConfig();
   const configFileName = getConfigFileName(config);
   createConfig({
     config,
     configName: configFileName,
     configFileName: GLOB_CONFIG_FILE_NAME,
-    output,
+    isH5,
   });
 };

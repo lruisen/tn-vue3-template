@@ -21,7 +21,8 @@
     "@tuniao/tnui-vue3-uniapp/global",
     "types/**/*.d.ts",
     "build/**/*.ts",
-    "build/**/*.d.ts"
+    "build/**/*.d.ts",
+    "src/app.config.js"
   ],
   "exclude": ["node_modules", "unpackage", "dist", "**/*.js"]
 }

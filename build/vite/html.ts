@@ -1,19 +1,16 @@
 import pkg from '../../package.json';
 import type { PluginOption } from 'vite';
 import { createHtmlPlugin } from 'vite-plugin-html';
-import { GLOB_CONFIG_FILE_NAME } from '@/utils';
+import { GLOB_CONFIG_FILE_NAME } from '../../src/utils';
 
 export const configHtmlPlugin = (env: any, isBuild: boolean) => {
   const { VITE_GLOB_APP_TITLE, VITE_GLOB_APP_PUBLIC_BASE } = env;
-
   const path = VITE_GLOB_APP_PUBLIC_BASE.endsWith('/')
     ? VITE_GLOB_APP_PUBLIC_BASE
     : `${VITE_GLOB_APP_PUBLIC_BASE}/`;
-
   const getAppConfigSrc = () => {
     return `${path || '/'}${GLOB_CONFIG_FILE_NAME}?v=${pkg.version}-${new Date().getTime()}`;
   };
-
   const htmlPlugin: PluginOption[] = createHtmlPlugin({
     minify: isBuild,
     inject: {
@@ -34,5 +31,6 @@ export const configHtmlPlugin = (env: any, isBuild: boolean) => {
         : [],
     },
   });
+
   return htmlPlugin;
 };

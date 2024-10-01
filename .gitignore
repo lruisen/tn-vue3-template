@@ -30,3 +30,7 @@ dist-ssr
 
 # lock
 pnpm-lock.yaml
+
+# app.confg file
+app.config.js
+app.config.ts

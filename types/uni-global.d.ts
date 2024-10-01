@@ -9,4 +9,8 @@ declare global {
     mitter?: Emitter<Events>; // 自定义 mitt 事件总线
     [key: string]: any; // 大范围定义
   }
+
+  interface Window {
+    [key: string]: any; // 大范围定义
+  }
 }

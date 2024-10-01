@@ -6,35 +6,42 @@ import { isArray } from './is';
 export const GLOB_CONFIG_FILE_NAME = 'app.config.js';
 
 /**
- * 获取打包后的全局配置文件路径
- * @returns 路径
+ * 全局配置文件解析
+ * @param envConf 全局配置文件
+ * @returns
  */
-export const getAppConfigFilePath = () => {
-  const { VITE_GLOB_APP_PUBLIC_BASE } = import.meta.env;
+export function wrapperEnv(envConf: Recordable) {
+  const ret: any = {};
 
-  const path = VITE_GLOB_APP_PUBLIC_BASE.endsWith('/')
-    ? VITE_GLOB_APP_PUBLIC_BASE
-    : `${VITE_GLOB_APP_PUBLIC_BASE}/`;
+  for (const envName of Object.keys(envConf)) {
+    let realName = envConf[envName].replace(/\\n/g, '\n');
+    realName = realName === 'true' ? true : realName === 'false' ? false : realName;
 
-  return `${path || '/'}${GLOB_CONFIG_FILE_NAME}`;
-};
+    if (envName === 'VITE_PORT') {
+      realName = Number(realName);
+    }
+    if (envName === 'VITE_PROXY' && realName) {
+      try {
+        realName = JSON.parse(realName.replace(/'/g, '"'));
+      } catch (error) {
+        realName = '';
+      }
+    }
+    ret[envName] = realName;
+    if (typeof realName === 'string') {
+      process.env[envName] = realName;
+    } else if (typeof realName === 'object') {
+      process.env[envName] = JSON.stringify(realName);
+    }
+  }
+
+  return ret;
+}
 
 export const getConfigFileName = (env: Record<string, any>) => {
   return `__PRODUCTION__${env.VITE_GLOB_APP_SHORT_NAME || '__APP'}__CONF__`
     .toUpperCase()
     .replace(/\s/g, '');
-};
-
-/**
- * 加载全局配置文件
- */
-export const loadGlobalConfig = async () => {
-  const path = getAppConfigFilePath();
-  const globalConfig = await import(path).then((i) => i.default);
-  const key = getConfigFileName(import.meta.env);
-
-  // 将这个全局配置挂在到 uni 对象上
-  uni[key] = globalConfig;
 };
 
 /**
